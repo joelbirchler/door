@@ -1,4 +1,17 @@
 body {
   margin: 0;
-  background-color: #f3c;
+  padding: 20%;
+  background-color: #444;
+}
+
+#button {
+  padding: 20%;
+  background-color: #09d;
+  border: 3px solid #666;
+  color: #ddd;
+}
+
+#button:hover {
+  background-color: #2bf;
+  border: 3px solid #777;
 }
