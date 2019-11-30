@@ -55,6 +55,7 @@ func main() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+  log.Println("home")
   http.ServeFile(w, r, "./static/index.html")
 }
 
