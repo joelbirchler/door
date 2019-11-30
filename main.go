@@ -16,8 +16,8 @@ var bcm uint
 var pin rpio.Pin
 
 func init() {
-  flag.StringVar(&port, "p", "8080", "Port to listen on")
-	flag.StringVar(&port, "port", "8080", "Port to listen on")
+  flag.StringVar(&port, "p", "443", "Port to listen on")
+	flag.StringVar(&port, "port", "443", "Port to listen on")
   flag.UintVar(&bcm, "g", 4, "GPIO pin number")
 	flag.UintVar(&bcm, "gpio", 4, "GPIO pin number")
 }
@@ -49,7 +49,7 @@ func main() {
   }
 
   log.Printf("Listening on :%s and controlling GPIO %d", port, pin)
-	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+	if err := srv.ListenAndServeTLS("./certs/tls-cert.pem", "./certs/tls-key.pem"); err != http.ErrServerClosed {
 		log.Fatalln("Could not start origin server:", err)
 	}
 }
