@@ -62,7 +62,11 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func pushHandler(w http.ResponseWriter, r *http.Request) {
   log.Println("push")
 
-  pin.Toggle()
+  go func() {
+    pin.High()
+    time.Sleep(500 * time.Millisecond)
+    pin.Low()
+  }()
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "ok")

@@ -9,6 +9,5 @@ Simple server for opening and closing my garage door with an old Raspberry Pi.
 
 # Todo
 
-- gpio
 - tls
 - auth
