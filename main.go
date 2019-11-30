@@ -8,21 +8,31 @@ import (
 	"net/http"
 
   "github.com/gorilla/mux"
+  "github.com/stianeikeland/go-rpio/v4"
 )
 
 var port string
-var pin uint
+var bcm uint
+var pin rpio.Pin
 
 func init() {
   flag.StringVar(&port, "p", "8080", "Port to listen on")
 	flag.StringVar(&port, "port", "8080", "Port to listen on")
-  flag.UintVar(&pin, "g", 7, "GPIO pin number")
-	flag.UintVar(&pin, "gpio", 7, "GPIO pin number")
+  flag.UintVar(&bcm, "g", 4, "GPIO pin number")
+	flag.UintVar(&bcm, "gpio", 4, "GPIO pin number")
 }
 
 func main() {
+  defer rpio.Close()
+
 	flag.Parse()
-	log.Printf("Listening on :%s and controlling GPIO %d", port, pin)
+
+  if err := rpio.Open(); err != nil {
+    log.Fatalln("Could not open rpio:", err)
+  }
+
+  pin = rpio.Pin(bcm)
+  pin.Output()
 
 	r := mux.NewRouter()
 
@@ -38,6 +48,7 @@ func main() {
     ReadTimeout: 10 * time.Second,
   }
 
+  log.Printf("Listening on :%s and controlling GPIO %d", port, pin)
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatalln("Could not start origin server:", err)
 	}
@@ -49,6 +60,9 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func pushHandler(w http.ResponseWriter, r *http.Request) {
   log.Println("push")
+
+  pin.Toggle()
+
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "ok")
 }
